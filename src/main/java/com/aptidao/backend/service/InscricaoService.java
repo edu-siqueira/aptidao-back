@@ -37,7 +37,7 @@ public class InscricaoService {
         }
         try {
             Inscricao inscricao = new Inscricao(nome, email, request.dataNascimento(), request.percurso());
-            return paraResponse(repository.saveAndFlush(inscricao));
+            return converterParaDTO(repository.saveAndFlush(inscricao));
         } catch (DataIntegrityViolationException ex) {
             // duas requisições simultâneas com o mesmo e-mail: a constraint do banco desempata
             throw new InscricaoDuplicadaException();
@@ -46,12 +46,12 @@ public class InscricaoService {
 
     @Transactional(readOnly = true)
     public List<InscricaoDTO> listar() {
-        return repository.findAllByOrderByIdAsc().stream().map(this::paraResponse).toList();
+        return repository.findAllByOrderByIdAsc().stream().map(this::converterParaDTO).toList();
     }
 
     @Transactional(readOnly = true)
     public InscricaoDTO consultar(String email) {
-        return paraResponse(buscar(email));
+        return converterParaDTO(buscar(email));
     }
 
     @Transactional
@@ -63,7 +63,7 @@ public class InscricaoService {
         inscricao.setNome(nome);
         inscricao.setDataNascimento(request.dataNascimento());
         inscricao.setPercurso(request.percurso());
-        return paraResponse(inscricao);
+        return converterParaDTO(inscricao);
     }
 
     @Transactional
@@ -97,7 +97,7 @@ public class InscricaoService {
         return inscricoes.stream().filter(inscricao -> inscricao.getPercurso() == percurso).count();
     }
 
-    private InscricaoDTO paraResponse(Inscricao inscricao) {
+    private InscricaoDTO converterParaDTO(Inscricao inscricao) {
         int idade = regulamento.calcularIdadeNaProva(inscricao.getDataNascimento());
         return new InscricaoDTO(
                 inscricao.getNome(),
