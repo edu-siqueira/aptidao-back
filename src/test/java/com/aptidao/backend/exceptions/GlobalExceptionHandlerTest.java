@@ -2,8 +2,8 @@ package com.aptidao.backend.exceptions;
 
 import com.aptidao.backend.dto.InscricaoPostDTO;
 import com.aptidao.backend.dto.InscricaoDTO;
-import com.aptidao.backend.enums.Categoria;
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumCategoria;
+import com.aptidao.backend.enums.EnumPercurso;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -147,7 +147,7 @@ class GlobalExceptionHandlerTest {
         @GetMapping("/resposta")
         InscricaoDTO resposta() {
             return new InscricaoDTO(
-                    "Ana Souza", "ana.souza@email.com", LocalDate.of(1990, 5, 20), Percurso.KM_10, 36, Categoria.ADULTO);
+                    "Ana Souza", "ana.souza@email.com", LocalDate.of(1990, 5, 20), EnumPercurso.KM_10, 36, EnumCategoria.ADULTO);
         }
     }
 }

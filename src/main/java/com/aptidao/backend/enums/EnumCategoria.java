@@ -1,6 +1,6 @@
 package com.aptidao.backend.enums;
 
-public enum Categoria {
+public enum EnumCategoria {
     JUVENIL,
     ADULTO,
     MASTER,

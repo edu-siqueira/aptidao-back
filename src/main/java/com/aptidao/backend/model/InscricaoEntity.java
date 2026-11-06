@@ -1,6 +1,6 @@
 package com.aptidao.backend.model;
 
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumPercurso;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @Table(name = "inscricao")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Inscricao {
+public class InscricaoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +40,9 @@ public class Inscricao {
     @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Percurso percurso;
+    private EnumPercurso percurso;
 
-    public Inscricao(String nome, String email, LocalDate dataNascimento, Percurso percurso) {
+    public InscricaoEntity(String nome, String email, LocalDate dataNascimento, EnumPercurso percurso) {
         this.nome = nome;
         this.email = email;
         this.dataNascimento = dataNascimento;

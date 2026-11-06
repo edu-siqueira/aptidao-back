@@ -4,10 +4,10 @@ import com.aptidao.backend.dto.InscricaoPutDTO;
 import com.aptidao.backend.dto.InscricaoPostDTO;
 import com.aptidao.backend.dto.InscricaoDTO;
 import com.aptidao.backend.dto.InscricaoResumoDTO;
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumPercurso;
 import com.aptidao.backend.exceptions.InscricaoDuplicadaException;
 import com.aptidao.backend.exceptions.InscricaoNaoEncontradaException;
-import com.aptidao.backend.model.Inscricao;
+import com.aptidao.backend.model.InscricaoEntity;
 import com.aptidao.backend.repository.InscricaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,7 +36,7 @@ public class InscricaoService {
             throw new InscricaoDuplicadaException();
         }
         try {
-            Inscricao inscricao = new Inscricao(nome, email, request.dataNascimento(), request.percurso());
+            InscricaoEntity inscricao = new InscricaoEntity(nome, email, request.dataNascimento(), request.percurso());
             return converterParaDTO(repository.saveAndFlush(inscricao));
         } catch (DataIntegrityViolationException ex) {
             // duas requisições simultâneas com o mesmo e-mail: a constraint do banco desempata
@@ -56,7 +56,7 @@ public class InscricaoService {
 
     @Transactional
     public InscricaoDTO editar(String email, InscricaoPutDTO request) {
-        Inscricao inscricao = buscar(email);
+        InscricaoEntity inscricao = buscar(email);
         String nome = validador.normalizarNome(request.nome());
         validarDados(nome, request.dataNascimento(), request.percurso());
 
@@ -75,29 +75,29 @@ public class InscricaoService {
 
     @Transactional(readOnly = true)
     public InscricaoResumoDTO resumo() {
-        List<Inscricao> inscricoes = repository.findAllByOrderByIdAsc();
-        long km5 = contarPorPercurso(inscricoes, Percurso.KM_5);
-        long km10 = contarPorPercurso(inscricoes, Percurso.KM_10);
+        List<InscricaoEntity> inscricoes = repository.findAllByOrderByIdAsc();
+        long km5 = contarPorPercurso(inscricoes, EnumPercurso.KM_5);
+        long km10 = contarPorPercurso(inscricoes, EnumPercurso.KM_10);
         return new InscricaoResumoDTO(inscricoes.size(), km5, km10);
     }
 
-    private void validarDados(String nomeNormalizado, LocalDate dataNascimento, Percurso percurso) {
+    private void validarDados(String nomeNormalizado, LocalDate dataNascimento, EnumPercurso percurso) {
         validador.validarNome(nomeNormalizado);
         validador.validarDataNascimento(dataNascimento);
         validador.validarPercurso(percurso);
         regulamento.validarParticipacao(regulamento.calcularIdadeNaProva(dataNascimento), percurso);
     }
 
-    private Inscricao buscar(String email) {
+    private InscricaoEntity buscar(String email) {
         return repository.findByEmail(validador.normalizarEmail(email))
                 .orElseThrow(InscricaoNaoEncontradaException::new);
     }
 
-    private long contarPorPercurso(List<Inscricao> inscricoes, Percurso percurso) {
+    private long contarPorPercurso(List<InscricaoEntity> inscricoes, EnumPercurso percurso) {
         return inscricoes.stream().filter(inscricao -> inscricao.getPercurso() == percurso).count();
     }
 
-    private InscricaoDTO converterParaDTO(Inscricao inscricao) {
+    private InscricaoDTO converterParaDTO(InscricaoEntity inscricao) {
         int idade = regulamento.calcularIdadeNaProva(inscricao.getDataNascimento());
         return new InscricaoDTO(
                 inscricao.getNome(),

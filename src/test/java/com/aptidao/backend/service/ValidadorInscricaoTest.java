@@ -1,6 +1,6 @@
 package com.aptidao.backend.service;
 
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumPercurso;
 import com.aptidao.backend.exceptions.RegraNegocioException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -127,6 +127,6 @@ class ValidadorInscricaoTest {
     void recusaPercursoAusente() {
         assertThatThrownBy(() -> validador.validarPercurso(null))
                 .hasMessage("O percurso é obrigatório. Use KM_5 ou KM_10.");
-        assertThatCode(() -> validador.validarPercurso(Percurso.KM_5)).doesNotThrowAnyException();
+        assertThatCode(() -> validador.validarPercurso(EnumPercurso.KM_5)).doesNotThrowAnyException();
     }
 }

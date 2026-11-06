@@ -1,7 +1,7 @@
 package com.aptidao.backend.service;
 
-import com.aptidao.backend.enums.Categoria;
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumCategoria;
+import com.aptidao.backend.enums.EnumPercurso;
 import com.aptidao.backend.exceptions.RegraNegocioException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,13 +50,13 @@ class RegulamentoServiceTest {
             "60, SENIOR",
             "90, SENIOR"
     })
-    void defineCategoriaNasBordas(int idade, Categoria categoriaEsperada) {
+    void defineCategoriaNasBordas(int idade, EnumCategoria categoriaEsperada) {
         assertThat(regulamento.definirCategoria(idade)).isEqualTo(categoriaEsperada);
     }
 
     @ParameterizedTest
-    @EnumSource(Percurso.class)
-    void recusaMenorDe14AnosEmQualquerPercurso(Percurso percurso) {
+    @EnumSource(EnumPercurso.class)
+    void recusaMenorDe14AnosEmQualquerPercurso(EnumPercurso percurso) {
         assertThatThrownBy(() -> regulamento.validarParticipacao(13, percurso))
                 .isInstanceOf(RegraNegocioException.class)
                 .hasMessage(MENSAGEM_IDADE_MINIMA);
@@ -64,25 +64,25 @@ class RegulamentoServiceTest {
 
     @Test
     void idadeMinimaTemPrecedenciaSobreRestricaoDosDezKm() {
-        assertThatThrownBy(() -> regulamento.validarParticipacao(13, Percurso.KM_10))
+        assertThatThrownBy(() -> regulamento.validarParticipacao(13, EnumPercurso.KM_10))
                 .hasMessage(MENSAGEM_IDADE_MINIMA);
     }
 
     @Test
     void recusaDezKmParaMenorDe18Anos() {
-        assertThatThrownBy(() -> regulamento.validarParticipacao(17, Percurso.KM_10))
+        assertThatThrownBy(() -> regulamento.validarParticipacao(17, EnumPercurso.KM_10))
                 .isInstanceOf(RegraNegocioException.class)
                 .hasMessage(MENSAGEM_KM_10);
     }
 
     @Test
     void aceitaCincoKmAPartirDe14Anos() {
-        assertThatCode(() -> regulamento.validarParticipacao(14, Percurso.KM_5)).doesNotThrowAnyException();
-        assertThatCode(() -> regulamento.validarParticipacao(17, Percurso.KM_5)).doesNotThrowAnyException();
+        assertThatCode(() -> regulamento.validarParticipacao(14, EnumPercurso.KM_5)).doesNotThrowAnyException();
+        assertThatCode(() -> regulamento.validarParticipacao(17, EnumPercurso.KM_5)).doesNotThrowAnyException();
     }
 
     @Test
     void aceitaDezKmAPartirDe18Anos() {
-        assertThatCode(() -> regulamento.validarParticipacao(18, Percurso.KM_10)).doesNotThrowAnyException();
+        assertThatCode(() -> regulamento.validarParticipacao(18, EnumPercurso.KM_10)).doesNotThrowAnyException();
     }
 }

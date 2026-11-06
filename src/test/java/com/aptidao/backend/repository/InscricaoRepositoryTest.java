@@ -1,7 +1,7 @@
 package com.aptidao.backend.repository;
 
-import com.aptidao.backend.enums.Percurso;
-import com.aptidao.backend.model.Inscricao;
+import com.aptidao.backend.enums.EnumPercurso;
+import com.aptidao.backend.model.InscricaoEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -26,24 +26,24 @@ class InscricaoRepositoryTest {
         repository.saveAndFlush(inscricao("Carla", "carla@email.com"));
 
         assertThat(repository.findAllByOrderByIdAsc())
-                .extracting(Inscricao::getEmail)
+                .extracting(InscricaoEntity::getEmail)
                 .containsExactly("bruno@email.com", "ana@email.com", "carla@email.com");
     }
 
     @Test
     void editarMantemAPosicaoNaLista() {
-        Inscricao primeira = repository.saveAndFlush(inscricao("Bruno", "bruno@email.com"));
+        InscricaoEntity primeira = repository.saveAndFlush(inscricao("Bruno", "bruno@email.com"));
         repository.saveAndFlush(inscricao("Ana", "ana@email.com"));
 
         primeira.setNome("Bruno Alterado");
-        primeira.setPercurso(Percurso.KM_10);
+        primeira.setPercurso(EnumPercurso.KM_10);
         repository.saveAndFlush(primeira);
 
         assertThat(repository.findAllByOrderByIdAsc())
-                .extracting(Inscricao::getEmail, Inscricao::getNome, Inscricao::getPercurso)
+                .extracting(InscricaoEntity::getEmail, InscricaoEntity::getNome, InscricaoEntity::getPercurso)
                 .containsExactly(
-                        tuple("bruno@email.com", "Bruno Alterado", Percurso.KM_10),
-                        tuple("ana@email.com", "Ana", Percurso.KM_5));
+                        tuple("bruno@email.com", "Bruno Alterado", EnumPercurso.KM_10),
+                        tuple("ana@email.com", "Ana", EnumPercurso.KM_5));
     }
 
     @Test
@@ -65,7 +65,7 @@ class InscricaoRepositoryTest {
 
         assertThat(removidas).isEqualTo(1);
         assertThat(repository.findAllByOrderByIdAsc())
-                .extracting(Inscricao::getNome)
+                .extracting(InscricaoEntity::getNome)
                 .containsExactly("Bruno", "Ana Nova");
     }
 
@@ -79,7 +79,7 @@ class InscricaoRepositoryTest {
         assertThat(repository.findAllByOrderByIdAsc()).hasSize(1);
     }
 
-    private Inscricao inscricao(String nome, String email) {
-        return new Inscricao(nome, email, LocalDate.of(1990, 5, 20), Percurso.KM_5);
+    private InscricaoEntity inscricao(String nome, String email) {
+        return new InscricaoEntity(nome, email, LocalDate.of(1990, 5, 20), EnumPercurso.KM_5);
     }
 }

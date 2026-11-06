@@ -1,7 +1,7 @@
 package com.aptidao.backend.service;
 
-import com.aptidao.backend.enums.Categoria;
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumCategoria;
+import com.aptidao.backend.enums.EnumPercurso;
 import com.aptidao.backend.exceptions.RegraNegocioException;
 
 import java.time.LocalDate;
@@ -25,26 +25,26 @@ public class RegulamentoService {
         return Period.between(dataNascimento, dataProva).getYears();
     }
 
-    public void validarParticipacao(int idade, Percurso percurso) {
+    public void validarParticipacao(int idade, EnumPercurso percurso) {
         if (idade < IDADE_MINIMA) {
             throw new RegraNegocioException("A idade mínima para participar é " + IDADE_MINIMA + " anos.");
         }
-        if (percurso == Percurso.KM_10 && idade < IDADE_MINIMA_KM_10) {
+        if (percurso == EnumPercurso.KM_10 && idade < IDADE_MINIMA_KM_10) {
             throw new RegraNegocioException(
                     "O percurso de 10 km é permitido somente a partir de " + IDADE_MINIMA_KM_10 + " anos.");
         }
     }
 
-    public Categoria definirCategoria(int idade) {
+    public EnumCategoria definirCategoria(int idade) {
         if (idade >= IDADE_INICIO_SENIOR) {
-            return Categoria.SENIOR;
+            return EnumCategoria.SENIOR;
         }
         if (idade >= IDADE_INICIO_MASTER) {
-            return Categoria.MASTER;
+            return EnumCategoria.MASTER;
         }
         if (idade >= IDADE_INICIO_ADULTO) {
-            return Categoria.ADULTO;
+            return EnumCategoria.ADULTO;
         }
-        return Categoria.JUVENIL;
+        return EnumCategoria.JUVENIL;
     }
 }

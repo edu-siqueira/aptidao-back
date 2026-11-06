@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class InscricaoEntityControllerTest {
+class InscricaoControllerTest {
 
     private static final String ROTA = "/api/inscricoes";
     private static final String ROTA_POR_EMAIL = ROTA + "/{email}";

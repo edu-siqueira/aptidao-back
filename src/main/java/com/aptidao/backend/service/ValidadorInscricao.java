@@ -1,6 +1,6 @@
 package com.aptidao.backend.service;
 
-import com.aptidao.backend.enums.Percurso;
+import com.aptidao.backend.enums.EnumPercurso;
 import com.aptidao.backend.exceptions.RegraNegocioException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -59,7 +59,7 @@ public class ValidadorInscricao {
         }
     }
 
-    public void validarPercurso(Percurso percurso) {
+    public void validarPercurso(EnumPercurso percurso) {
         if (percurso == null) {
             throw new RegraNegocioException("O percurso é obrigatório. Use KM_5 ou KM_10.");
         }
